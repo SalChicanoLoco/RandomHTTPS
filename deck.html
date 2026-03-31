@@ -1,0 +1,623 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sena's AI Collective — AI Team-as-a-Service</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --ink:    #0f0d0a;
+  --paper:  #f7f2e8;
+  --rust:   #c2603a;
+  --gold:   #d4a017;
+  --sage:   #4a6741;
+  --smoke:  #e8e0d0;
+  --muted:  #8a8070;
+  --serif:  'Playfair Display', serif;
+  --sans:   'DM Sans', sans-serif;
+  --mono:   'DM Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+.slide {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 80px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--smoke);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideIn 0.7s ease forwards;
+}
+.slide:nth-child(1) { animation-delay: 0s; }
+.slide:nth-child(2) { animation-delay: 0.1s; }
+.slide:nth-child(3) { animation-delay: 0.15s; }
+.slide:nth-child(4) { animation-delay: 0.2s; }
+.slide:nth-child(5) { animation-delay: 0.25s; }
+.slide:nth-child(6) { animation-delay: 0.3s; }
+.slide:nth-child(7) { animation-delay: 0.35s; }
+.slide:nth-child(8) { animation-delay: 0.4s; }
+@keyframes slideIn { to { opacity:1; transform:translateY(0); } }
+.slide-cover {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 80px;
+}
+.cover-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cover-eyebrow::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--rust);
+}
+.cover-title {
+  font-family: var(--serif);
+  font-size: clamp(48px, 7vw, 96px);
+  font-weight: 900;
+  line-height: 0.95;
+  color: var(--paper);
+  margin-bottom: 24px;
+  max-width: 800px;
+}
+.cover-title span { color: var(--rust); }
+.cover-sub {
+  font-size: 18px;
+  color: rgba(247,242,232,0.6);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 56px;
+}
+.cover-meta {
+  display: flex;
+  gap: 40px;
+  border-top: 1px solid rgba(247,242,232,0.1);
+  padding-top: 28px;
+}
+.meta-item {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: rgba(247,242,232,0.35);
+  text-transform: uppercase;
+}
+.meta-item strong {
+  display: block;
+  color: var(--paper);
+  font-size: 14px;
+  margin-bottom: 4px;
+  letter-spacing: 0;
+  font-family: var(--sans);
+  font-weight: 600;
+}
+.cover-deco {
+  position: absolute;
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 180px;
+  opacity: 0.04;
+  font-family: var(--serif);
+  font-weight: 900;
+  pointer-events: none;
+}
+.slide-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.slide-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--smoke);
+  max-width: 80px;
+}
+.slide-title {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 900;
+  line-height: 1.05;
+  color: var(--ink);
+  margin-bottom: 20px;
+  max-width: 700px;
+}
+.slide-body {
+  font-size: 16px;
+  color: #3a3530;
+  line-height: 1.8;
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+.slide-problem {
+  background: #1a100a;
+  color: var(--paper);
+}
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-top: 32px;
+  max-width: 800px;
+}
+.problem-cell {
+  background: rgba(247,242,232,0.04);
+  padding: 28px 32px;
+  border-left: 3px solid var(--rust);
+}
+.problem-cell-num {
+  font-family: var(--serif);
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--rust);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.problem-cell-label {
+  font-size: 13px;
+  color: rgba(247,242,232,0.5);
+  line-height: 1.5;
+}
+.problem-cell-label strong {
+  display: block;
+  color: var(--paper);
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.solution-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.solution-card {
+  flex: 1;
+  min-width: 200px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 28px 24px;
+  position: relative;
+}
+.solution-card-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.solution-card-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.solution-card-body {
+  font-size: 12px;
+  color: rgba(247,242,232,0.55);
+  line-height: 1.65;
+}
+.solution-card-tag {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 8px;
+}
+.slide-numbers { background: var(--ink); color: var(--paper); }
+.numbers-big {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(247,242,232,0.06);
+  margin-top: 40px;
+  max-width: 900px;
+}
+.number-block {
+  background: #0f0d0a;
+  padding: 40px 32px;
+  text-align: center;
+}
+.number-val {
+  font-family: var(--serif);
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--rust);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.number-val sup {
+  font-size: 28px;
+  vertical-align: super;
+}
+.number-label {
+  font-size: 12px;
+  color: rgba(247,242,232,0.45);
+  line-height: 1.5;
+}
+.number-label strong {
+  display: block;
+  color: var(--paper);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.number-note {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--rust);
+  text-transform: uppercase;
+  margin-top: 6px;
+  display: block;
+}
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-top: 36px;
+  max-width: 900px;
+}
+.price-card {
+  border: 1px solid var(--smoke);
+  padding: 32px 28px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.price-card:hover { border-color: var(--rust); }
+.price-card.featured {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--rust);
+}
+.price-tier {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 12px;
+}
+.price-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.price-amount {
+  font-family: var(--serif);
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.price-period {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.featured .price-period { color: rgba(247,242,232,0.4); }
+.price-features {
+  list-style: none;
+  margin-bottom: 24px;
+}
+.price-features li {
+  font-size: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+.featured .price-features li {
+  border-color: rgba(247,242,232,0.07);
+  color: rgba(247,242,232,0.75);
+}
+.price-features li::before {
+  content: '→';
+  color: var(--rust);
+  font-size: 10px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.price-note {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--sage);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.shift-comparison {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 0;
+  margin-top: 36px;
+  max-width: 800px;
+  align-items: center;
+}
+.shift-col {
+  padding: 32px;
+  border: 1px solid var(--smoke);
+}
+.shift-col.old { background: #f0ece3; }
+.shift-col.new { background: var(--ink); color: var(--paper); }
+.shift-col-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.old .shift-col-label { color: var(--muted); }
+.new .shift-col-label { color: var(--rust); }
+.shift-item {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.new .shift-item { border-color: rgba(247,242,232,0.08); color: rgba(247,242,232,0.8); }
+.shift-item-cost {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+}
+.old .shift-item-cost { color: #c44; }
+.new .shift-item-cost { color: var(--sage); }
+.shift-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--rust);
+}
+.shift-total {
+  padding: 14px 0 0;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}
+.slide-partner { background: var(--sage); color: var(--paper); }
+.partner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(247,242,232,0.12);
+  border: 1px solid rgba(247,242,232,0.2);
+  padding: 10px 20px;
+  margin-bottom: 32px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.partner-points {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 32px;
+  max-width: 760px;
+}
+.partner-point {
+  background: rgba(247,242,232,0.08);
+  padding: 24px;
+  border-left: 3px solid rgba(247,242,232,0.3);
+}
+.partner-point-title {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.partner-point-body {
+  font-size: 12px;
+  color: rgba(247,242,232,0.6);
+  line-height: 1.6;
+}
+.slide-cta { background: var(--rust); color: var(--paper); }
+.cta-title {
+  font-family: var(--serif);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 900;
+  line-height: 1;
+  max-width: 700px;
+  margin-bottom: 32px;
+}
+.cta-options {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.cta-btn {
+  padding: 16px 32px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid var(--paper);
+  text-decoration: none;
+}
+.cta-btn.primary { background: var(--paper); color: var(--rust); }
+.cta-btn.secondary { background: transparent; color: var(--paper); }
+.cta-fine {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(247,242,232,0.5);
+  margin-top: 40px;
+  letter-spacing: 1px;
+}
+.slide-num {
+  position: absolute;
+  bottom: 28px;
+  right: 48px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+.slide-cover .slide-num,
+.slide-problem .slide-num,
+.slide-numbers .slide-num,
+.slide-partner .slide-num,
+.slide-cta .slide-num { color: rgba(247,242,232,0.2); }
+@media (max-width: 900px) {
+  .slide { padding: 36px 24px 64px; min-height: auto; }
+  .slide-cover { padding: 48px 24px 72px; }
+  .cover-meta, .problem-grid, .numbers-big, .pricing-grid, .partner-points, .shift-comparison {
+    display: block;
+  }
+  .cover-meta > *, .problem-cell, .number-block, .price-card, .partner-point, .shift-col {
+    margin-bottom: 16px;
+  }
+  .shift-arrow { padding: 12px 0; }
+  .slide-num { right: 24px; }
+}
+</style>
+</head>
+<body>
+<div class="slide slide-cover">
+  <div class="cover-eyebrow">Sena's AI Collective · Confidential</div>
+  <h1 class="cover-title">Your Grant Writer<br>Costs Too Much.<br><span>We Fix That.</span></h1>
+  <p class="cover-sub">A new model for nonprofit capacity — AI-powered mini teams that do more research, write better grants, and cost a fraction of what you're paying now.</p>
+  <div class="cover-meta">
+    <div class="meta-item"><strong>Sena's AI Collective</strong>Santa Fe, NM</div>
+    <div class="meta-item"><strong>Claude Partner Network</strong>Anthropic Certified</div>
+    <div class="meta-item"><strong>March 2026</strong>Confidential Deck</div>
+  </div>
+  <div class="cover-deco">$</div>
+  <div class="slide-num">01 / 08</div>
+</div>
+<div class="slide slide-problem">
+  <div class="slide-label" style="color:var(--rust);">The Problem</div>
+  <h2 class="slide-title" style="color:var(--paper);">You're paying full-time prices<br>for part-time output.</h2>
+  <div class="problem-grid">
+    <div class="problem-cell">
+      <div class="problem-cell-num">$63K</div>
+      <div class="problem-cell-label"><strong>Average grant writer salary</strong>Plus benefits, overhead, turnover costs. For one person.</div>
+    </div>
+    <div class="problem-cell">
+      <div class="problem-cell-num">60%</div>
+      <div class="problem-cell-label"><strong>Time spent on research</strong>Not writing — searching, synthesizing, formatting. Repetitive work AI does in minutes.</div>
+    </div>
+    <div class="problem-cell">
+      <div class="problem-cell-num">3–6</div>
+      <div class="problem-cell-label"><strong>Grants submitted per quarter</strong>One writer, one pipeline. Bottleneck every time.</div>
+    </div>
+    <div class="problem-cell">
+      <div class="problem-cell-num">$0</div>
+      <div class="problem-cell-label"><strong>Tech investment in most nonprofits</strong>No AI tools. No automation. No leverage on the people you're already paying.</div>
+    </div>
+  </div>
+  <div class="slide-num">02 / 08</div>
+</div>
+<div class="slide">
+  <div class="slide-label">The Solution</div>
+  <h2 class="slide-title">Deploy a mini AI team.<br>Keep your human writer.</h2>
+  <p class="slide-body">We don't replace your grant writer. We make them 10x more productive. A custom AI team handles research, first drafts, funder matching, and report writing — your writer focuses on relationships and strategy.</p>
+  <div class="solution-row">
+    <div class="solution-card"><div class="solution-card-tag">Research</div><div class="solution-card-icon">📚</div><div class="solution-card-title">Rox</div><div class="solution-card-body">Funder research, literature synthesis, policy analysis, and source documentation — in minutes, not days.</div></div>
+    <div class="solution-card"><div class="solution-card-tag">Writing</div><div class="solution-card-icon">✍️</div><div class="solution-card-title">Grant</div><div class="solution-card-body">First-draft narratives, letters of inquiry, budget justifications, and impact reports tailored to each funder.</div></div>
+    <div class="solution-card"><div class="solution-card-tag">Strategy</div><div class="solution-card-icon">🧭</div><div class="solution-card-title">Nova</div><div class="solution-card-body">Pipeline management, deadline tracking, funder relationship mapping, and submission coordination.</div></div>
+    <div class="solution-card"><div class="solution-card-tag">Admin</div><div class="solution-card-icon">⚙️</div><div class="solution-card-title">Aria</div><div class="solution-card-body">Reporting, compliance documentation, board communications, and institutional knowledge retention.</div></div>
+  </div>
+  <div class="slide-num">03 / 08</div>
+</div>
+<div class="slide slide-numbers">
+  <div class="slide-label" style="color:var(--rust);">The Math</div>
+  <h2 class="slide-title" style="color:var(--paper);">What you save.<br>What you gain.</h2>
+  <div class="numbers-big">
+    <div class="number-block"><div class="number-val">70<sup>%</sup></div><div class="number-label"><strong>Cost reduction</strong>vs. full-time grant writer salary + benefits<span class="number-note">Same output. Less overhead.</span></div></div>
+    <div class="number-block"><div class="number-val">3<sup>×</sup></div><div class="number-label"><strong>More grants submitted</strong>AI handles research and first drafts; your writer focuses on closes<span class="number-note">Pipeline grows. Bottleneck gone.</span></div></div>
+    <div class="number-block"><div class="number-val">$0</div><div class="number-label"><strong>Your API cost</strong>After setup, you pay Anthropic directly — no markup, no middleman<span class="number-note">You own the tools forever.</span></div></div>
+  </div>
+  <div class="slide-num">04 / 08</div>
+</div>
+<div class="slide">
+  <div class="slide-label">Budget Shift</div>
+  <h2 class="slide-title">Redirect what you're already spending.</h2>
+  <p class="slide-body">You don't need a bigger budget. You need a smarter one. Here's what a typical mid-size nonprofit can reallocate — without cutting capacity.</p>
+  <div class="shift-comparison">
+    <div class="shift-col old">
+      <div class="shift-col-label">Before: Traditional Model</div>
+      <div class="shift-item">Full-time grant writer<span class="shift-item-cost">$63,000/yr</span></div>
+      <div class="shift-item">Grant research subscriptions<span class="shift-item-cost">$3,600/yr</span></div>
+      <div class="shift-item">Database tools (Candid/etc.)<span class="shift-item-cost">$2,400/yr</span></div>
+      <div class="shift-item">Consultant overflow<span class="shift-item-cost">$6,000/yr</span></div>
+      <div class="shift-total">Total overhead<span style="color:#c44;">$75,000/yr</span></div>
+    </div>
+    <div class="shift-arrow">→</div>
+    <div class="shift-col new">
+      <div class="shift-col-label">After: AI-Augmented Model</div>
+      <div class="shift-item">Human writer (strategy + rel.)<span class="shift-item-cost" style="color:rgba(247,242,232,0.7);">$45,000/yr</span></div>
+      <div class="shift-item">Sena AI Team setup fee<span class="shift-item-cost">$2,500 once</span></div>
+      <div class="shift-item">Annual maintenance<span class="shift-item-cost">$1,200/yr</span></div>
+      <div class="shift-item">Anthropic API (direct)<span class="shift-item-cost">~$600/yr</span></div>
+      <div class="shift-total">Total overhead<span style="color:var(--sage);">$49,300/yr</span></div>
+    </div>
+  </div>
+  <div class="slide-num">05 / 08</div>
+</div>
+<div class="slide">
+  <div class="slide-label">Pricing</div>
+  <h2 class="slide-title">Simple. Transparent.<br>You own it forever.</h2>
+  <div class="pricing-grid">
+    <div class="price-card"><div class="price-tier">Starter</div><div class="price-name">Mini Team</div><div class="price-amount">$1,500</div><div class="price-period">one-time setup + $600/yr maintenance</div><ul class="price-features"><li>2 AI agents (Research + Writing)</li><li>Custom-trained on your org's voice</li><li>Grant template library</li><li>Email delivery workflow</li><li>Anthropic API pass-through (you pay direct)</li></ul><div class="price-note">Best for small orgs, 1–5 grants/yr</div></div>
+    <div class="price-card featured"><div class="price-tier">Most Popular</div><div class="price-name">Full Team</div><div class="price-amount">$2,500</div><div class="price-period">one-time setup + $1,200/yr maintenance</div><ul class="price-features"><li>4 AI agents (Research, Writing, Strategy, Admin)</li><li>Full grant pipeline dashboard</li><li>Funder research library</li><li>Bilingual EN/ES capability</li><li>Quarterly strategy sessions</li><li>Anthropic API pass-through (you pay direct)</li></ul><div class="price-note" style="color:var(--gold);">Replaces $25K+ in annual overhead</div></div>
+    <div class="price-card"><div class="price-tier">Enterprise</div><div class="price-name">Full License</div><div class="price-amount">Custom</div><div class="price-period">white-label + full team build-out</div><ul class="price-features"><li>Custom team names and branding</li><li>Full source code handoff</li><li>Staff training included</li><li>Priority support + updates</li><li>Claude Partner Network certified</li><li>Anthropic API pass-through (you pay direct)</li></ul><div class="price-note">For networks, associations, multi-site orgs</div></div>
+  </div>
+  <div class="slide-num">06 / 08</div>
+</div>
+<div class="slide slide-partner">
+  <div class="partner-badge">Official Claude Partner Network Member</div>
+  <div class="slide-label" style="color:rgba(247,242,232,0.5);">Why This Works</div>
+  <h2 class="slide-title" style="color:var(--paper);">Built on the most trusted<br>AI infrastructure in the world.</h2>
+  <p class="slide-body" style="color:rgba(247,242,232,0.65);">Sena's AI Collective is a member of Anthropic's Claude Partner Network — the same infrastructure used by Accenture, Deloitte, and the world's largest enterprises. You get enterprise-grade AI at community org pricing.</p>
+  <div class="partner-points">
+    <div class="partner-point"><div class="partner-point-title">You Pay Anthropic Directly</div><div class="partner-point-body">No markup on API costs. No vendor lock-in. Your data stays yours. You own the relationship with the AI provider.</div></div>
+    <div class="partner-point"><div class="partner-point-title">$100M Partner Ecosystem</div><div class="partner-point-body">Anthropic committed $100M to partner support in 2026. Certified architects, technical support, and co-marketing — we bring that infrastructure to you.</div></div>
+    <div class="partner-point"><div class="partner-point-title">Safety-First Architecture</div><div class="partner-point-body">Claude is designed with human-in-the-loop principles. Every AI output is reviewed by your staff before it goes anywhere. AI suggests. Humans decide.</div></div>
+    <div class="partner-point"><div class="partner-point-title">Bilingual by Default</div><div class="partner-point-body">Every team we deploy is fully bilingual EN/ES — built by and for New Mexico's communities, not retrofitted from a generic product.</div></div>
+  </div>
+  <div class="slide-num">07 / 08</div>
+</div>
+<div class="slide slide-cta">
+  <div class="slide-label" style="color:rgba(247,242,232,0.5);">Let's Talk</div>
+  <h2 class="cta-title">Ready to shift your budget?</h2>
+  <p class="slide-body" style="color:rgba(247,242,232,0.75);max-width:520px;">We'll do a free 30-minute audit of your current grant writing process and show you exactly where the AI team fits. No commitment. No pitch pressure.</p>
+  <div class="cta-options">
+    <a href="mailto:schicanoloco@gmail.com" class="cta-btn primary">Schedule a Free Audit</a>
+    <a href="https://senacolectivo.com" class="cta-btn secondary">senacolectivo.com</a>
+  </div>
+  <div class="cta-fine">Salvador Sena · schicanoloco@gmail.com · Santa Fe, NM · Sena's AI Collective<br>Built with Claude · Anthropic Claude Partner Network · EIN 41-5210879</div>
+  <div class="slide-num">08 / 08</div>
+</div>
+</body></html>
